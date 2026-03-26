@@ -8,281 +8,292 @@
   <meta name="apple-mobile-web-app-title" content="健身計時" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon-192.png" />
-  <title>健身組間計時器</title>
+  <title>健身計時器</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     :root {
-      --bg: #0f0f13;
-      --surface: #1a1a24;
-      --card: #22222f;
-      --accent: #ff6b35;
-      --accent2: #4fc3f7;
-      --rest-color: #4caf82;
+      --bg: #0d0d10;
+      --surface: #18181f;
+      --card: #1e1e28;
+      --work: #ff6b35;
+      --rest: #4fc3a1;
       --text: #f0f0f5;
-      --muted: #888;
-      --radius: 20px;
+      --muted: #666;
+      --muted2: #999;
+    }
+
+    html, body {
+      height: 100%;
+      height: -webkit-fill-available;
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: env(safe-area-inset-top, 20px) 16px env(safe-area-inset-bottom, 16px);
+      min-height: 100%;
+      padding: env(safe-area-inset-top, 48px) 20px env(safe-area-inset-bottom, 24px);
       user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
     }
 
-    h1 {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-top: 12px;
-      margin-bottom: 24px;
-    }
+    /* ── SCREENS ── */
+    .screen { width: 100%; max-width: 400px; display: none; flex-direction: column; align-items: center; flex: 1; }
+    .screen.active { display: flex; }
 
-    /* ── Settings panel ── */
-    #settings {
-      width: 100%;
-      max-width: 420px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+    /* ══════════════════════════════
+       SETUP SCREEN
+    ══════════════════════════════ */
+    #screen-setup { justify-content: center; gap: 20px; }
 
-    .setting-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 18px 20px;
-    }
-
-    .setting-label {
+    .app-title {
       font-size: 13px;
-      color: var(--muted);
+      letter-spacing: 3px;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
+      color: var(--muted2);
+      margin-bottom: 8px;
+      align-self: flex-start;
     }
 
-    .setting-row {
+    .setup-heading {
+      font-size: 28px;
+      font-weight: 800;
+      align-self: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .cfg-row {
+      width: 100%;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 16px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .setting-val {
-      font-size: 32px;
-      font-weight: 700;
-      min-width: 80px;
-      text-align: center;
-    }
+    .cfg-left { display: flex; flex-direction: column; gap: 2px; }
+    .cfg-name { font-size: 15px; font-weight: 600; }
+    .cfg-hint { font-size: 12px; color: var(--muted2); }
 
-    .btn-adj {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
+    .cfg-ctrl { display: flex; align-items: center; gap: 12px; }
+
+    .adj {
+      width: 36px; height: 36px;
+      border-radius: 10px;
       background: var(--surface);
-      border: none;
-      color: var(--text);
-      font-size: 26px;
-      line-height: 1;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border: none; color: var(--text);
+      font-size: 20px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
     }
+    .adj:active { background: #2a2a38; }
 
-    .btn-adj:active { background: #2e2e42; transform: scale(0.93); }
+    .cfg-val { font-size: 20px; font-weight: 700; min-width: 52px; text-align: center; }
 
-    .start-btn {
+    .btn-start {
       margin-top: 8px;
       width: 100%;
-      max-width: 420px;
-      height: 68px;
-      border-radius: 22px;
+      height: 64px;
+      border-radius: 20px;
       border: none;
-      background: var(--accent);
+      background: var(--work);
       color: #fff;
-      font-size: 20px;
-      font-weight: 700;
+      font-size: 18px;
+      font-weight: 800;
       letter-spacing: 1px;
       cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn-start:active { opacity: .85; transform: scale(.97); }
+
+    /* ══════════════════════════════
+       WORKOUT SCREEN
+    ══════════════════════════════ */
+    #screen-workout { justify-content: space-between; padding-top: 8px; }
+
+    /* top bar */
+    .top-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
     }
 
-    .start-btn:active { opacity: 0.85; transform: scale(0.97); }
+    .set-badge {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted2);
+    }
 
-    /* ── Timer screen ── */
-    #timer-screen {
-      display: none;
+    .set-badge span { color: var(--text); font-size: 18px; }
+
+    .btn-end {
+      background: var(--card);
+      border: none;
+      border-radius: 12px;
+      color: var(--muted2);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-end:active { background: #2a2a38; }
+
+    /* stats row */
+    .stats-row {
+      width: 100%;
+      display: flex;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: var(--card);
+      border-radius: 16px;
+      padding: 14px 12px;
+      display: flex;
       flex-direction: column;
       align-items: center;
-      width: 100%;
-      max-width: 420px;
+      gap: 4px;
     }
 
-    .phase-label {
-      font-size: 15px;
+    .stat-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted2); }
+    .stat-val { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .stat-val.work-color { color: var(--work); }
+    .stat-val.rest-color { color: var(--rest); }
+
+    /* phase display */
+    .phase-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .phase-tag {
+      font-size: 12px;
       letter-spacing: 3px;
       text-transform: uppercase;
-      margin-bottom: 10px;
-      transition: color 0.4s;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      transition: background .3s, color .3s;
     }
 
-    .set-info {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 32px;
+    .phase-tag.work { background: rgba(255,107,53,.15); color: var(--work); }
+    .phase-tag.rest { background: rgba(79,195,161,.15); color: var(--rest); }
+    .phase-tag.idle { background: var(--card); color: var(--muted2); }
+
+    .big-timer {
+      font-size: 96px;
+      font-weight: 800;
+      letter-spacing: -4px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      transition: color .3s;
     }
 
-    /* ring */
-    .ring-wrap {
-      position: relative;
-      width: 260px;
-      height: 260px;
-      margin-bottom: 36px;
-    }
+    .big-timer.work { color: var(--work); }
+    .big-timer.rest { color: var(--rest); }
+    .big-timer.idle { color: var(--muted); }
 
-    svg.ring {
+    .timer-unit { font-size: 16px; color: var(--muted2); margin-top: 4px; }
+
+    /* main button */
+    .btn-main-wrap { width: 100%; margin-bottom: 8px; }
+
+    .btn-main {
       width: 100%;
-      height: 100%;
-      transform: rotate(-90deg);
-    }
-
-    .ring-bg { fill: none; stroke: var(--surface); stroke-width: 14; }
-
-    .ring-fg {
-      fill: none;
-      stroke-width: 14;
-      stroke-linecap: round;
-      transition: stroke-dashoffset 0.9s linear, stroke 0.4s;
-    }
-
-    .ring-text {
-      position: absolute;
-      inset: 0;
+      height: 80px;
+      border-radius: 24px;
+      border: none;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: opacity .15s, transform .1s, background .3s;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 10px;
     }
 
-    .ring-time {
-      font-size: 72px;
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -2px;
-    }
+    .btn-main:active { opacity: .85; transform: scale(.97); }
+    .btn-main.idle { background: var(--work); color: #fff; }
+    .btn-main.work { background: var(--rest); color: #fff; }
+    .btn-main.rest { background: var(--work); color: #fff; }
 
-    .ring-sub {
+    .btn-icon { font-size: 26px; }
+
+    /* hint */
+    .hint-text {
       font-size: 13px;
       color: var(--muted);
-      margin-top: 6px;
+      text-align: center;
+      min-height: 18px;
     }
 
-    /* controls */
-    .controls {
+    /* ══════════════════════════════
+       FINISH SCREEN
+    ══════════════════════════════ */
+    #screen-finish { justify-content: center; gap: 0; }
+
+    .finish-emoji { font-size: 72px; margin-bottom: 16px; }
+    .finish-title { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
+    .finish-sub { font-size: 15px; color: var(--muted2); margin-bottom: 40px; }
+
+    .finish-stats {
+      width: 100%;
       display: flex;
-      gap: 20px;
-      margin-bottom: 28px;
-    }
-
-    .ctrl-btn {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-      font-size: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.1s, opacity 0.15s;
-    }
-
-    .ctrl-btn:active { transform: scale(0.92); opacity: 0.8; }
-
-    #btn-playpause {
-      width: 88px;
-      height: 88px;
-      background: var(--accent);
-      color: #fff;
-      font-size: 34px;
-    }
-
-    #btn-stop {
-      background: var(--card);
-      color: var(--muted);
-    }
-
-    #btn-skip {
-      background: var(--card);
-      color: var(--muted);
-    }
-
-    /* progress dots */
-    .dots {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      max-width: 320px;
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--surface);
-      transition: background 0.3s;
-    }
-
-    .dot.done { background: var(--accent); }
-    .dot.active { background: var(--accent2); }
-
-    /* finish screen */
-    #finish-screen {
-      display: none;
       flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      margin-top: 40px;
+      gap: 12px;
+      margin-bottom: 40px;
     }
 
-    .finish-icon { font-size: 72px; }
-    .finish-title { font-size: 28px; font-weight: 700; }
-    .finish-sub { color: var(--muted); font-size: 15px; }
+    .finish-row {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-    .again-btn {
-      margin-top: 12px;
-      padding: 18px 48px;
-      border-radius: 18px;
+    .finish-row-label { font-size: 15px; color: var(--muted2); }
+    .finish-row-val { font-size: 20px; font-weight: 800; }
+
+    .btn-again {
+      width: 100%;
+      height: 64px;
+      border-radius: 20px;
       border: none;
-      background: var(--accent);
+      background: var(--work);
       color: #fff;
-      font-size: 17px;
-      font-weight: 700;
+      font-size: 18px;
+      font-weight: 800;
       cursor: pointer;
     }
+    .btn-again:active { opacity: .85; }
 
-    .again-btn:active { opacity: 0.85; }
-
-    /* flash overlay */
+    /* flash */
     #flash {
       pointer-events: none;
-      position: fixed;
-      inset: 0;
-      opacity: 0;
-      transition: opacity 0.05s;
-      z-index: 99;
+      position: fixed; inset: 0;
+      opacity: 0; z-index: 99;
+      transition: opacity .06s;
     }
   </style>
 </head>
@@ -290,253 +301,292 @@
 
 <div id="flash"></div>
 
-<h1>健身計時器</h1>
+<!-- ══ SETUP ══ -->
+<div class="screen active" id="screen-setup">
+  <div class="app-title">Fitness Timer</div>
+  <div class="setup-heading">設定訓練</div>
 
-<!-- ── SETTINGS ── -->
-<div id="settings">
-
-  <div class="setting-card">
-    <div class="setting-label">訓練時間（秒）</div>
-    <div class="setting-row">
-      <button class="btn-adj" onclick="adj('work',-5)">−</button>
-      <div class="setting-val" id="disp-work">45</div>
-      <button class="btn-adj" onclick="adj('work',5)">+</button>
+  <div class="cfg-row">
+    <div class="cfg-left">
+      <div class="cfg-name">訓練時間</div>
+      <div class="cfg-hint">每組訓練的秒數</div>
+    </div>
+    <div class="cfg-ctrl">
+      <button class="adj" onclick="adj('work',-5)">−</button>
+      <div class="cfg-val" id="d-work">45秒</div>
+      <button class="adj" onclick="adj('work',5)">+</button>
     </div>
   </div>
 
-  <div class="setting-card">
-    <div class="setting-label">休息時間（秒）</div>
-    <div class="setting-row">
-      <button class="btn-adj" onclick="adj('rest',-5)">−</button>
-      <div class="setting-val" id="disp-rest">60</div>
-      <button class="btn-adj" onclick="adj('rest',5)">+</button>
+  <div class="cfg-row">
+    <div class="cfg-left">
+      <div class="cfg-name">休息時間</div>
+      <div class="cfg-hint">每組之間的秒數</div>
+    </div>
+    <div class="cfg-ctrl">
+      <button class="adj" onclick="adj('rest',-5)">−</button>
+      <div class="cfg-val" id="d-rest">60秒</div>
+      <button class="adj" onclick="adj('rest',5)">+</button>
     </div>
   </div>
 
-  <div class="setting-card">
-    <div class="setting-label">組數</div>
-    <div class="setting-row">
-      <button class="btn-adj" onclick="adj('sets',-1)">−</button>
-      <div class="setting-val" id="disp-sets">4</div>
-      <button class="btn-adj" onclick="adj('sets',1)">+</button>
-    </div>
-  </div>
-
-  <button class="start-btn" onclick="startWorkout()">開始訓練</button>
+  <button class="btn-start" onclick="initWorkout()">開始訓練</button>
 </div>
 
-<!-- ── TIMER ── -->
-<div id="timer-screen">
-  <div class="phase-label" id="phase-label">訓練中</div>
-  <div class="set-info" id="set-info">第 1 組 / 共 4 組</div>
+<!-- ══ WORKOUT ══ -->
+<div class="screen" id="screen-workout">
 
-  <div class="ring-wrap">
-    <svg class="ring" viewBox="0 0 260 260">
-      <circle class="ring-bg" cx="130" cy="130" r="113"/>
-      <circle class="ring-fg" id="ring-fg" cx="130" cy="130" r="113"/>
-    </svg>
-    <div class="ring-text">
-      <div class="ring-time" id="ring-time">45</div>
-      <div class="ring-sub" id="ring-sub">秒</div>
+  <div class="top-bar">
+    <div class="set-badge">第 <span id="set-num">1</span> 組</div>
+    <button class="btn-end" onclick="endWorkout()">結束訓練</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">訓練時間</div>
+      <div class="stat-val work-color" id="stat-work">00:00</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">休息時間</div>
+      <div class="stat-val rest-color" id="stat-rest">00:00</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">完成組數</div>
+      <div class="stat-val" id="stat-sets">0</div>
     </div>
   </div>
 
-  <div class="controls">
-    <button class="ctrl-btn" id="btn-stop" onclick="stopWorkout()" title="停止">⏹</button>
-    <button class="ctrl-btn" id="btn-playpause" onclick="togglePause()" title="暫停">⏸</button>
-    <button class="ctrl-btn" id="btn-skip" onclick="skipPhase()" title="跳過">⏭</button>
+  <div class="phase-area">
+    <div class="phase-tag idle" id="phase-tag">準備開始</div>
+    <div class="big-timer idle" id="big-timer">–</div>
+    <div class="timer-unit" id="timer-unit">按下開始</div>
   </div>
 
-  <div class="dots" id="dots"></div>
+  <div class="btn-main-wrap">
+    <button class="btn-main idle" id="btn-main" onclick="handleMain()">
+      <span class="btn-icon" id="btn-icon">💪</span>
+      <span id="btn-label">開始訓練</span>
+    </button>
+  </div>
+
+  <div class="hint-text" id="hint-text">按下按鈕開始第 1 組</div>
+
 </div>
 
-<!-- ── FINISH ── -->
-<div id="finish-screen">
-  <div class="finish-icon">🏆</div>
-  <div class="finish-title">完成訓練！</div>
-  <div class="finish-sub" id="finish-sub">共完成 4 組，太棒了！</div>
-  <button class="again-btn" onclick="goBack()">再來一次</button>
+<!-- ══ FINISH ══ -->
+<div class="screen" id="screen-finish">
+  <div class="finish-emoji">🏆</div>
+  <div class="finish-title">訓練完成！</div>
+  <div class="finish-sub">做得很好，繼續保持</div>
+  <div class="finish-stats">
+    <div class="finish-row">
+      <div class="finish-row-label">完成組數</div>
+      <div class="finish-row-val" id="f-sets">—</div>
+    </div>
+    <div class="finish-row">
+      <div class="finish-row-label">總訓練時間</div>
+      <div class="finish-row-val" id="f-work">—</div>
+    </div>
+    <div class="finish-row">
+      <div class="finish-row-label">總休息時間</div>
+      <div class="finish-row-val" id="f-rest">—</div>
+    </div>
+    <div class="finish-row">
+      <div class="finish-row-label">總計時間</div>
+      <div class="finish-row-val" id="f-total">—</div>
+    </div>
+  </div>
+  <button class="btn-again" onclick="goSetup()">再來一次</button>
 </div>
 
 <script>
+  // ── Config ──
+  const cfg = { work: 45, rest: 60 };
+
   // ── State ──
-  const cfg = { work: 45, rest: 60, sets: 4 };
-  let state = null; // { phase:'work'|'rest', set:1, remaining, total, interval, paused }
+  let phase = 'idle';   // idle | work | rest
+  let elapsed = 0;      // seconds in current phase
+  let totalWork = 0;    // accumulated work seconds
+  let totalRest = 0;    // accumulated rest seconds
+  let sets = 0;         // completed sets
+  let currentSet = 1;
+  let ticker = null;
+  let startTs = null;   // timestamp when current phase started
 
-  // ring geometry
-  const CIRC = 2 * Math.PI * 113; // ~710
-  const ringFg = document.getElementById('ring-fg');
-  ringFg.style.strokeDasharray = CIRC;
-
-  // ── Settings helpers ──
+  // ── Setup helpers ──
   function adj(key, delta) {
-    const mins = { work: 5, rest: 5, sets: 1 };
-    const maxs = { work: 300, rest: 300, sets: 20 };
-    cfg[key] = Math.max(mins[key], Math.min(maxs[key], cfg[key] + delta));
-    document.getElementById('disp-' + key).textContent = cfg[key];
+    const min = { work: 5, rest: 5 };
+    const max = { work: 600, rest: 600 };
+    cfg[key] = Math.max(min[key], Math.min(max[key], cfg[key] + delta));
+    document.getElementById('d-' + key).textContent = cfg[key] + '秒';
   }
 
-  // ── Start ──
-  function startWorkout() {
-    state = { phase: 'work', set: 1, remaining: cfg.work, total: cfg.work, paused: false, interval: null };
-    show('timer-screen');
-    buildDots();
-    renderTimer();
-    state.interval = setInterval(tick, 1000);
+  function initWorkout() {
+    phase = 'idle'; elapsed = 0;
+    totalWork = 0; totalRest = 0;
+    sets = 0; currentSet = 1;
+    clearInterval(ticker); ticker = null;
+    renderWorkout();
+    showScreen('screen-workout');
   }
 
-  function buildDots() {
-    const el = document.getElementById('dots');
-    el.innerHTML = '';
-    for (let i = 1; i <= cfg.sets; i++) {
-      const d = document.createElement('div');
-      d.className = 'dot' + (i === 1 ? ' active' : '');
-      d.id = 'dot-' + i;
-      el.appendChild(d);
-    }
-  }
-
-  function updateDots() {
-    for (let i = 1; i <= cfg.sets; i++) {
-      const d = document.getElementById('dot-' + i);
-      if (!d) continue;
-      d.className = 'dot' + (i < state.set ? ' done' : i === state.set ? ' active' : '');
-    }
-  }
-
-  // ── Tick ──
-  function tick() {
-    if (state.paused) return;
-    state.remaining--;
-    if (state.remaining <= 0) {
-      nextPhase();
-    } else {
-      renderTimer();
-    }
-  }
-
-  function nextPhase() {
-    if (state.phase === 'work') {
-      // done work → go rest (unless last set)
-      if (state.set >= cfg.sets) {
-        finish();
-        return;
+  // ── Main button handler ──
+  function handleMain() {
+    beepStart();
+    if (phase === 'idle' || phase === 'rest') {
+      // → 開始訓練
+      if (phase === 'rest') {
+        totalRest += elapsed;
+        currentSet++;
       }
-      state.phase = 'rest';
-      state.remaining = cfg.rest;
-      state.total = cfg.rest;
-      beep('rest');
-      flash('#4caf82');
-    } else {
-      // done rest → next work set
-      state.set++;
-      state.phase = 'work';
-      state.remaining = cfg.work;
-      state.total = cfg.work;
-      beep('work');
+      phase = 'work';
+      elapsed = 0;
+      startTicker();
       flash('#ff6b35');
-      updateDots();
+    } else if (phase === 'work') {
+      // → 開始休息
+      totalWork += elapsed;
+      sets++;
+      phase = 'rest';
+      elapsed = 0;
+      startTicker();
+      flash('#4fc3a1');
     }
-    renderTimer();
+    renderWorkout();
   }
 
-  function renderTimer() {
-    const isWork = state.phase === 'work';
-    const color = isWork ? 'var(--accent)' : 'var(--rest-color)';
-
-    document.getElementById('phase-label').textContent = isWork ? '訓練中' : '休息中';
-    document.getElementById('phase-label').style.color = isWork ? 'var(--accent)' : 'var(--rest-color)';
-    document.getElementById('set-info').textContent = `第 ${state.set} 組 / 共 ${cfg.sets} 組`;
-    document.getElementById('ring-time').textContent = state.remaining;
-
-    // ring fill
-    const pct = state.remaining / state.total;
-    ringFg.style.strokeDashoffset = CIRC * (1 - pct);
-    ringFg.style.stroke = isWork ? '#ff6b35' : '#4caf82';
+  function startTicker() {
+    clearInterval(ticker);
+    startTs = Date.now() - elapsed * 1000;
+    ticker = setInterval(() => {
+      elapsed = Math.floor((Date.now() - startTs) / 1000);
+      renderWorkout();
+    }, 500);
   }
 
-  // ── Controls ──
-  function togglePause() {
-    state.paused = !state.paused;
-    document.getElementById('btn-playpause').textContent = state.paused ? '▶' : '⏸';
+  function renderWorkout() {
+    // set counter
+    document.getElementById('set-num').textContent = currentSet;
+    document.getElementById('stat-sets').textContent = sets;
+    document.getElementById('stat-work').textContent = fmt(totalWork + (phase === 'work' ? elapsed : 0));
+    document.getElementById('stat-rest').textContent = fmt(totalRest + (phase === 'rest' ? elapsed : 0));
+
+    const timer = document.getElementById('big-timer');
+    const tag = document.getElementById('phase-tag');
+    const btnMain = document.getElementById('btn-main');
+    const btnIcon = document.getElementById('btn-icon');
+    const btnLabel = document.getElementById('btn-label');
+    const hint = document.getElementById('hint-text');
+    const unit = document.getElementById('timer-unit');
+
+    if (phase === 'idle') {
+      timer.className = 'big-timer idle';
+      timer.textContent = '–';
+      tag.className = 'phase-tag idle';
+      tag.textContent = '準備開始';
+      unit.textContent = '按下開始';
+      btnMain.className = 'btn-main idle';
+      btnIcon.textContent = '💪';
+      btnLabel.textContent = '開始訓練';
+      hint.textContent = `按下按鈕開始第 ${currentSet} 組`;
+    } else if (phase === 'work') {
+      timer.className = 'big-timer work';
+      timer.textContent = elapsed;
+      tag.className = 'phase-tag work';
+      tag.textContent = '訓練中';
+      unit.textContent = '秒';
+      btnMain.className = 'btn-main work';
+      btnIcon.textContent = '😮‍💨';
+      btnLabel.textContent = '完成，去休息';
+      hint.textContent = `第 ${currentSet} 組進行中`;
+    } else if (phase === 'rest') {
+      timer.className = 'big-timer rest';
+      timer.textContent = elapsed;
+      tag.className = 'phase-tag rest';
+      tag.textContent = '休息中';
+      unit.textContent = '秒';
+      btnMain.className = 'btn-main rest';
+      btnIcon.textContent = '💪';
+      btnLabel.textContent = `開始第 ${currentSet + 1} 組`;
+      hint.textContent = `已完成 ${sets} 組，準備好了就按`;
+    }
   }
 
-  function skipPhase() {
-    state.remaining = 0;
-    nextPhase();
+  function endWorkout() {
+    clearInterval(ticker);
+    // 把當前 phase 的時間也算進去
+    if (phase === 'work') { totalWork += elapsed; sets++; }
+    if (phase === 'rest') { totalRest += elapsed; }
+
+    document.getElementById('f-sets').textContent = sets + ' 組';
+    document.getElementById('f-work').textContent = fmt(totalWork);
+    document.getElementById('f-rest').textContent = fmt(totalRest);
+    document.getElementById('f-total').textContent = fmt(totalWork + totalRest);
+
+    beepFinish();
+    showScreen('screen-finish');
   }
 
-  function stopWorkout() {
-    if (state) { clearInterval(state.interval); state = null; }
-    show('settings');
+  function goSetup() { showScreen('screen-setup'); }
+
+  // ── Helpers ──
+  function fmt(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
   }
 
-  function finish() {
-    clearInterval(state.interval);
-    const sets = state.set;
-    state = null;
-    document.getElementById('finish-sub').textContent = `共完成 ${sets} 組，太棒了！`;
-    show('finish-screen');
-    beep('finish');
-  }
-
-  function goBack() {
-    show('settings');
-  }
-
-  // ── Screen switch ──
-  function show(id) {
-    ['settings','timer-screen','finish-screen'].forEach(s => {
-      document.getElementById(s).style.display = s === id
-        ? (s === 'settings' || s === 'finish-screen' ? 'flex' : 'flex')
-        : 'none';
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(el => {
+      el.classList.toggle('active', el.id === id);
     });
   }
 
-  // ── Audio beep (Web Audio API) ──
-  let audioCtx = null;
-  function getCtx() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    return audioCtx;
-  }
-
-  function beep(type) {
-    try {
-      const ctx = getCtx();
-      const configs = {
-        work:   [{ f: 880, d: 0.12 }, { f: 1100, d: 0.18 }],
-        rest:   [{ f: 440, d: 0.18 }, { f: 330,  d: 0.25 }],
-        finish: [{ f: 660, d: 0.15 }, { f: 880, d: 0.15 }, { f: 1100, d: 0.3 }],
-      };
-      let t = ctx.currentTime + 0.05;
-      (configs[type] || configs.work).forEach(({ f, d }) => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.connect(g); g.connect(ctx.destination);
-        o.type = 'sine';
-        o.frequency.setValueAtTime(f, t);
-        g.gain.setValueAtTime(0.5, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + d);
-        o.start(t); o.stop(t + d);
-        t += d + 0.04;
-      });
-    } catch(e) {}
-  }
-
-  // ── Flash ──
   function flash(color) {
     const el = document.getElementById('flash');
     el.style.background = color;
-    el.style.opacity = '0.25';
-    setTimeout(() => { el.style.opacity = '0'; }, 150);
+    el.style.opacity = '0.2';
+    setTimeout(() => el.style.opacity = '0', 180);
   }
 
-  // resume AudioContext on first touch (iOS requirement)
-  document.addEventListener('touchstart', () => {
-    try { getCtx().resume(); } catch(e) {}
-  }, { once: true });
+  // ── Audio ──
+  let actx = null;
+  function ctx() {
+    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+    return actx;
+  }
 
-  // 註冊 Service Worker（離線快取）
+  function tone(freq, dur, delay = 0) {
+    try {
+      const c = ctx();
+      const o = c.createOscillator();
+      const g = c.createGain();
+      o.connect(g); g.connect(c.destination);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(freq, c.currentTime + delay);
+      g.gain.setValueAtTime(0.4, c.currentTime + delay);
+      g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + delay + dur);
+      o.start(c.currentTime + delay);
+      o.stop(c.currentTime + delay + dur);
+    } catch(e) {}
+  }
+
+  function beepStart() {
+    if (phase === 'idle' || phase === 'rest') {
+      tone(880, 0.12); tone(1100, 0.18, 0.16);
+    } else {
+      tone(440, 0.18); tone(330, 0.25, 0.22);
+    }
+  }
+
+  function beepFinish() {
+    tone(660, 0.15); tone(880, 0.15, 0.19); tone(1100, 0.3, 0.38);
+  }
+
+  document.addEventListener('touchstart', () => { try { ctx(); } catch(e) {} }, { once: true });
+
+  // Service Worker
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js').catch(() => {});
