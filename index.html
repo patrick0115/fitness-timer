@@ -14,19 +14,15 @@
 
     :root {
       --bg: #0d0d10;
-      --surface: #18181f;
-      --card: #1e1e28;
+      --card: #1a1a22;
       --work: #ff6b35;
       --rest: #4fc3a1;
       --text: #f0f0f5;
-      --muted: #666;
-      --muted2: #999;
+      --muted: #555;
+      --muted2: #888;
     }
 
-    html, body {
-      height: 100%;
-      height: -webkit-fill-available;
-    }
+    html, body { height: 100%; height: -webkit-fill-available; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
@@ -35,235 +31,156 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       min-height: 100%;
-      padding: env(safe-area-inset-top, 48px) 20px env(safe-area-inset-bottom, 24px);
+      padding: env(safe-area-inset-top, 48px) 24px env(safe-area-inset-bottom, 32px);
       user-select: none;
-      overflow-x: hidden;
     }
 
-    /* ── SCREENS ── */
-    .screen { width: 100%; max-width: 400px; display: none; flex-direction: column; align-items: center; flex: 1; }
+    /* ── Screens ── */
+    .screen { width: 100%; max-width: 380px; display: none; flex-direction: column; align-items: center; }
     .screen.active { display: flex; }
 
-    /* ══════════════════════════════
-       SETUP SCREEN
-    ══════════════════════════════ */
-    #screen-setup { justify-content: center; gap: 20px; }
+    /* ══ START SCREEN ══ */
+    #screen-start { gap: 0; justify-content: center; }
 
-    .app-title {
-      font-size: 13px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--muted2);
-      margin-bottom: 8px;
-      align-self: flex-start;
-    }
+    .logo { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted2); margin-bottom: 16px; }
+    .logo-title { font-size: 36px; font-weight: 800; margin-bottom: 60px; }
 
-    .setup-heading {
-      font-size: 28px;
-      font-weight: 800;
-      align-self: flex-start;
-      margin-bottom: 20px;
-    }
-
-    .cfg-row {
+    .btn-go {
       width: 100%;
-      background: var(--card);
-      border-radius: 18px;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .cfg-left { display: flex; flex-direction: column; gap: 2px; }
-    .cfg-name { font-size: 15px; font-weight: 600; }
-    .cfg-hint { font-size: 12px; color: var(--muted2); }
-
-    .cfg-ctrl { display: flex; align-items: center; gap: 12px; }
-
-    .adj {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      background: var(--surface);
-      border: none; color: var(--text);
-      font-size: 20px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background .15s;
-    }
-    .adj:active { background: #2a2a38; }
-
-    .cfg-val { font-size: 20px; font-weight: 700; min-width: 52px; text-align: center; }
-
-    .btn-start {
-      margin-top: 8px;
-      width: 100%;
-      height: 64px;
-      border-radius: 20px;
+      height: 76px;
+      border-radius: 24px;
       border: none;
       background: var(--work);
       color: #fff;
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: 1px;
       cursor: pointer;
       transition: opacity .15s, transform .1s;
     }
-    .btn-start:active { opacity: .85; transform: scale(.97); }
+    .btn-go:active { opacity: .85; transform: scale(.97); }
 
-    /* ══════════════════════════════
-       WORKOUT SCREEN
-    ══════════════════════════════ */
-    #screen-workout { justify-content: space-between; padding-top: 8px; }
+    /* ══ WORKOUT SCREEN ══ */
+    #screen-workout { gap: 0; justify-content: space-between; min-height: 80vh; }
 
-    /* top bar */
-    .top-bar {
+    /* top */
+    .top-row {
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 4px;
+      padding-top: 4px;
+      margin-bottom: 24px;
     }
 
-    .set-badge {
+    .set-pill {
       background: var(--card);
       border-radius: 12px;
-      padding: 8px 16px;
-      font-size: 14px;
+      padding: 8px 18px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--muted2);
     }
-
-    .set-badge span { color: var(--text); font-size: 18px; }
+    .set-pill b { color: var(--text); font-size: 18px; }
 
     .btn-end {
       background: var(--card);
       border: none;
       border-radius: 12px;
       color: var(--muted2);
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       padding: 8px 16px;
       cursor: pointer;
-      transition: background .15s;
     }
-    .btn-end:active { background: #2a2a38; }
+    .btn-end:active { opacity: .7; }
 
-    /* stats row */
-    .stats-row {
+    /* stats */
+    .stats {
       width: 100%;
       display: flex;
-      gap: 12px;
-      margin-bottom: 8px;
+      gap: 10px;
+      margin-bottom: 40px;
     }
 
-    .stat-card {
+    .stat {
       flex: 1;
       background: var(--card);
       border-radius: 16px;
-      padding: 14px 12px;
+      padding: 14px 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
     }
+    .stat-l { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted2); }
+    .stat-v { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .c-work { color: var(--work); }
+    .c-rest { color: var(--rest); }
 
-    .stat-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted2); }
-    .stat-val { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
-    .stat-val.work-color { color: var(--work); }
-    .stat-val.rest-color { color: var(--rest); }
-
-    /* phase display */
-    .phase-area {
+    /* center timer */
+    .timer-area {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
       flex: 1;
       justify-content: center;
     }
 
-    .phase-tag {
+    .phase-chip {
       font-size: 12px;
       letter-spacing: 3px;
       text-transform: uppercase;
       font-weight: 700;
-      padding: 5px 14px;
+      padding: 5px 16px;
       border-radius: 20px;
-      transition: background .3s, color .3s;
     }
+    .phase-chip.work { background: rgba(255,107,53,.15); color: var(--work); }
+    .phase-chip.rest { background: rgba(79,195,161,.15); color: var(--rest); }
 
-    .phase-tag.work { background: rgba(255,107,53,.15); color: var(--work); }
-    .phase-tag.rest { background: rgba(79,195,161,.15); color: var(--rest); }
-    .phase-tag.idle { background: var(--card); color: var(--muted2); }
-
-    .big-timer {
-      font-size: 96px;
+    .big-time {
+      font-size: 100px;
       font-weight: 800;
       letter-spacing: -4px;
       line-height: 1;
       font-variant-numeric: tabular-nums;
-      transition: color .3s;
     }
-
-    .big-timer.work { color: var(--work); }
-    .big-timer.rest { color: var(--rest); }
-    .big-timer.idle { color: var(--muted); }
-
-    .timer-unit { font-size: 16px; color: var(--muted2); margin-top: 4px; }
+    .big-time.work { color: var(--work); }
+    .big-time.rest { color: var(--rest); }
 
     /* main button */
-    .btn-main-wrap { width: 100%; margin-bottom: 8px; }
-
     .btn-main {
       width: 100%;
       height: 80px;
       border-radius: 24px;
       border: none;
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       cursor: pointer;
-      transition: opacity .15s, transform .1s, background .3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      transition: background .25s, opacity .15s, transform .1s;
+      margin-top: 40px;
+      margin-bottom: 12px;
     }
-
     .btn-main:active { opacity: .85; transform: scale(.97); }
-    .btn-main.idle { background: var(--work); color: #fff; }
     .btn-main.work { background: var(--rest); color: #fff; }
     .btn-main.rest { background: var(--work); color: #fff; }
 
-    .btn-icon { font-size: 26px; }
+    .sub-hint { font-size: 13px; color: var(--muted); text-align: center; min-height: 18px; }
 
-    /* hint */
-    .hint-text {
-      font-size: 13px;
-      color: var(--muted);
-      text-align: center;
-      min-height: 18px;
-    }
+    /* ══ FINISH SCREEN ══ */
+    #screen-finish { gap: 0; justify-content: center; }
 
-    /* ══════════════════════════════
-       FINISH SCREEN
-    ══════════════════════════════ */
-    #screen-finish { justify-content: center; gap: 0; }
+    .f-icon { font-size: 68px; margin-bottom: 14px; }
+    .f-title { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
+    .f-sub { font-size: 15px; color: var(--muted2); margin-bottom: 40px; }
 
-    .finish-emoji { font-size: 72px; margin-bottom: 16px; }
-    .finish-title { font-size: 30px; font-weight: 800; margin-bottom: 6px; }
-    .finish-sub { font-size: 15px; color: var(--muted2); margin-bottom: 40px; }
+    .f-stats { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px; }
 
-    .finish-stats {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 40px;
-    }
-
-    .finish-row {
+    .f-row {
       background: var(--card);
       border-radius: 16px;
       padding: 16px 20px;
@@ -271,14 +188,13 @@
       justify-content: space-between;
       align-items: center;
     }
-
-    .finish-row-label { font-size: 15px; color: var(--muted2); }
-    .finish-row-val { font-size: 20px; font-weight: 800; }
+    .f-row-l { font-size: 15px; color: var(--muted2); }
+    .f-row-v { font-size: 20px; font-weight: 800; }
 
     .btn-again {
       width: 100%;
-      height: 64px;
-      border-radius: 20px;
+      height: 68px;
+      border-radius: 22px;
       border: none;
       background: var(--work);
       color: #fff;
@@ -289,254 +205,155 @@
     .btn-again:active { opacity: .85; }
 
     /* flash */
-    #flash {
-      pointer-events: none;
-      position: fixed; inset: 0;
-      opacity: 0; z-index: 99;
-      transition: opacity .06s;
-    }
+    #flash { pointer-events: none; position: fixed; inset: 0; opacity: 0; z-index: 99; transition: opacity .07s; }
   </style>
 </head>
 <body>
 
 <div id="flash"></div>
 
-<!-- ══ SETUP ══ -->
-<div class="screen active" id="screen-setup">
-  <div class="app-title">Fitness Timer</div>
-  <div class="setup-heading">設定訓練</div>
-
-  <div class="cfg-row">
-    <div class="cfg-left">
-      <div class="cfg-name">訓練時間</div>
-      <div class="cfg-hint">每組訓練的秒數</div>
-    </div>
-    <div class="cfg-ctrl">
-      <button class="adj" onclick="adj('work',-5)">−</button>
-      <div class="cfg-val" id="d-work">45秒</div>
-      <button class="adj" onclick="adj('work',5)">+</button>
-    </div>
-  </div>
-
-  <div class="cfg-row">
-    <div class="cfg-left">
-      <div class="cfg-name">休息時間</div>
-      <div class="cfg-hint">每組之間的秒數</div>
-    </div>
-    <div class="cfg-ctrl">
-      <button class="adj" onclick="adj('rest',-5)">−</button>
-      <div class="cfg-val" id="d-rest">60秒</div>
-      <button class="adj" onclick="adj('rest',5)">+</button>
-    </div>
-  </div>
-
-  <button class="btn-start" onclick="initWorkout()">開始訓練</button>
+<!-- ══ START ══ -->
+<div class="screen active" id="screen-start">
+  <div class="logo">Fitness Timer</div>
+  <div class="logo-title">健身計時器</div>
+  <button class="btn-go" onclick="startWorkout()">開始訓練</button>
 </div>
 
 <!-- ══ WORKOUT ══ -->
 <div class="screen" id="screen-workout">
 
-  <div class="top-bar">
-    <div class="set-badge">第 <span id="set-num">1</span> 組</div>
+  <div class="top-row">
+    <div class="set-pill">第 <b id="set-num">1</b> 組</div>
     <button class="btn-end" onclick="endWorkout()">結束訓練</button>
   </div>
 
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-label">訓練時間</div>
-      <div class="stat-val work-color" id="stat-work">00:00</div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-l">訓練</div>
+      <div class="stat-v c-work" id="s-work">00:00</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">休息時間</div>
-      <div class="stat-val rest-color" id="stat-rest">00:00</div>
+    <div class="stat">
+      <div class="stat-l">休息</div>
+      <div class="stat-v c-rest" id="s-rest">00:00</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">完成組數</div>
-      <div class="stat-val" id="stat-sets">0</div>
+    <div class="stat">
+      <div class="stat-l">完成組</div>
+      <div class="stat-v" id="s-sets">0</div>
     </div>
   </div>
 
-  <div class="phase-area">
-    <div class="phase-tag idle" id="phase-tag">準備開始</div>
-    <div class="big-timer idle" id="big-timer">–</div>
-    <div class="timer-unit" id="timer-unit">按下開始</div>
+  <div class="timer-area">
+    <div class="phase-chip work" id="phase-chip">訓練中</div>
+    <div class="big-time work" id="big-time">00:00</div>
   </div>
 
-  <div class="btn-main-wrap">
-    <button class="btn-main idle" id="btn-main" onclick="handleMain()">
-      <span class="btn-icon" id="btn-icon">💪</span>
-      <span id="btn-label">開始訓練</span>
-    </button>
-  </div>
-
-  <div class="hint-text" id="hint-text">按下按鈕開始第 1 組</div>
+  <button class="btn-main work" id="btn-main" onclick="toggle()">😮‍💨 &nbsp;完成，去休息</button>
+  <div class="sub-hint" id="sub-hint">第 1 組進行中</div>
 
 </div>
 
 <!-- ══ FINISH ══ -->
 <div class="screen" id="screen-finish">
-  <div class="finish-emoji">🏆</div>
-  <div class="finish-title">訓練完成！</div>
-  <div class="finish-sub">做得很好，繼續保持</div>
-  <div class="finish-stats">
-    <div class="finish-row">
-      <div class="finish-row-label">完成組數</div>
-      <div class="finish-row-val" id="f-sets">—</div>
-    </div>
-    <div class="finish-row">
-      <div class="finish-row-label">總訓練時間</div>
-      <div class="finish-row-val" id="f-work">—</div>
-    </div>
-    <div class="finish-row">
-      <div class="finish-row-label">總休息時間</div>
-      <div class="finish-row-val" id="f-rest">—</div>
-    </div>
-    <div class="finish-row">
-      <div class="finish-row-label">總計時間</div>
-      <div class="finish-row-val" id="f-total">—</div>
-    </div>
+  <div class="f-icon">🏆</div>
+  <div class="f-title">訓練完成！</div>
+  <div class="f-sub">做得很好，繼續保持</div>
+  <div class="f-stats">
+    <div class="f-row"><div class="f-row-l">完成組數</div><div class="f-row-v" id="f-sets">—</div></div>
+    <div class="f-row"><div class="f-row-l">總訓練時間</div><div class="f-row-v" id="f-work">—</div></div>
+    <div class="f-row"><div class="f-row-l">總休息時間</div><div class="f-row-v" id="f-rest">—</div></div>
+    <div class="f-row"><div class="f-row-l">總計時間</div><div class="f-row-v" id="f-total">—</div></div>
   </div>
-  <button class="btn-again" onclick="goSetup()">再來一次</button>
+  <button class="btn-again" onclick="goStart()">再來一次</button>
 </div>
 
 <script>
-  // ── Config ──
-  const cfg = { work: 45, rest: 60 };
-
-  // ── State ──
-  let phase = 'idle';   // idle | work | rest
-  let elapsed = 0;      // seconds in current phase
-  let totalWork = 0;    // accumulated work seconds
-  let totalRest = 0;    // accumulated rest seconds
-  let sets = 0;         // completed sets
+  let phase = 'work';       // work | rest
+  let phaseStart = 0;       // timestamp
+  let totalWork = 0;        // ms
+  let totalRest = 0;        // ms
+  let sets = 0;             // completed sets
   let currentSet = 1;
   let ticker = null;
-  let startTs = null;   // timestamp when current phase started
 
-  // ── Setup helpers ──
-  function adj(key, delta) {
-    const min = { work: 5, rest: 5 };
-    const max = { work: 600, rest: 600 };
-    cfg[key] = Math.max(min[key], Math.min(max[key], cfg[key] + delta));
-    document.getElementById('d-' + key).textContent = cfg[key] + '秒';
-  }
-
-  function initWorkout() {
-    phase = 'idle'; elapsed = 0;
+  function startWorkout() {
+    phase = 'work';
     totalWork = 0; totalRest = 0;
     sets = 0; currentSet = 1;
-    clearInterval(ticker); ticker = null;
-    renderWorkout();
-    showScreen('screen-workout');
+    phaseStart = Date.now();
+    clearInterval(ticker);
+    ticker = setInterval(render, 500);
+    render();
+    show('screen-workout');
   }
 
-  // ── Main button handler ──
-  function handleMain() {
-    beepStart();
-    if (phase === 'idle' || phase === 'rest') {
-      // → 開始訓練
-      if (phase === 'rest') {
-        totalRest += elapsed;
-        currentSet++;
-      }
-      phase = 'work';
-      elapsed = 0;
-      startTicker();
-      flash('#ff6b35');
-    } else if (phase === 'work') {
-      // → 開始休息
-      totalWork += elapsed;
+  function toggle() {
+    beep();
+    const now = Date.now();
+    if (phase === 'work') {
+      totalWork += now - phaseStart;
       sets++;
       phase = 'rest';
-      elapsed = 0;
-      startTicker();
       flash('#4fc3a1');
+    } else {
+      totalRest += now - phaseStart;
+      currentSet++;
+      phase = 'work';
+      flash('#ff6b35');
     }
-    renderWorkout();
+    phaseStart = now;
+    render();
   }
 
-  function startTicker() {
-    clearInterval(ticker);
-    startTs = Date.now() - elapsed * 1000;
-    ticker = setInterval(() => {
-      elapsed = Math.floor((Date.now() - startTs) / 1000);
-      renderWorkout();
-    }, 500);
-  }
+  function render() {
+    const now = Date.now();
+    const cur = now - phaseStart;
 
-  function renderWorkout() {
-    // set counter
+    const workMs  = totalWork + (phase === 'work' ? cur : 0);
+    const restMs  = totalRest + (phase === 'rest' ? cur : 0);
+
+    document.getElementById('s-work').textContent  = fmtMs(workMs);
+    document.getElementById('s-rest').textContent  = fmtMs(restMs);
+    document.getElementById('s-sets').textContent  = sets;
     document.getElementById('set-num').textContent = currentSet;
-    document.getElementById('stat-sets').textContent = sets;
-    document.getElementById('stat-work').textContent = fmt(totalWork + (phase === 'work' ? elapsed : 0));
-    document.getElementById('stat-rest').textContent = fmt(totalRest + (phase === 'rest' ? elapsed : 0));
+    document.getElementById('big-time').textContent = fmtMs(cur);
 
-    const timer = document.getElementById('big-timer');
-    const tag = document.getElementById('phase-tag');
-    const btnMain = document.getElementById('btn-main');
-    const btnIcon = document.getElementById('btn-icon');
-    const btnLabel = document.getElementById('btn-label');
-    const hint = document.getElementById('hint-text');
-    const unit = document.getElementById('timer-unit');
-
-    if (phase === 'idle') {
-      timer.className = 'big-timer idle';
-      timer.textContent = '–';
-      tag.className = 'phase-tag idle';
-      tag.textContent = '準備開始';
-      unit.textContent = '按下開始';
-      btnMain.className = 'btn-main idle';
-      btnIcon.textContent = '💪';
-      btnLabel.textContent = '開始訓練';
-      hint.textContent = `按下按鈕開始第 ${currentSet} 組`;
-    } else if (phase === 'work') {
-      timer.className = 'big-timer work';
-      timer.textContent = elapsed;
-      tag.className = 'phase-tag work';
-      tag.textContent = '訓練中';
-      unit.textContent = '秒';
-      btnMain.className = 'btn-main work';
-      btnIcon.textContent = '😮‍💨';
-      btnLabel.textContent = '完成，去休息';
-      hint.textContent = `第 ${currentSet} 組進行中`;
-    } else if (phase === 'rest') {
-      timer.className = 'big-timer rest';
-      timer.textContent = elapsed;
-      tag.className = 'phase-tag rest';
-      tag.textContent = '休息中';
-      unit.textContent = '秒';
-      btnMain.className = 'btn-main rest';
-      btnIcon.textContent = '💪';
-      btnLabel.textContent = `開始第 ${currentSet + 1} 組`;
-      hint.textContent = `已完成 ${sets} 組，準備好了就按`;
-    }
+    const isWork = phase === 'work';
+    document.getElementById('big-time').className   = 'big-time ' + phase;
+    document.getElementById('phase-chip').className = 'phase-chip ' + phase;
+    document.getElementById('phase-chip').textContent = isWork ? '訓練中' : '休息中';
+    document.getElementById('btn-main').className   = 'btn-main ' + phase;
+    document.getElementById('btn-main').innerHTML   = isWork
+      ? '😮‍💨 &nbsp;完成，去休息'
+      : `💪 &nbsp;開始第 ${currentSet + 1} 組`;
+    document.getElementById('sub-hint').textContent = isWork
+      ? `第 ${currentSet} 組進行中`
+      : `已完成 ${sets} 組，準備好按下繼續`;
   }
 
   function endWorkout() {
     clearInterval(ticker);
-    // 把當前 phase 的時間也算進去
-    if (phase === 'work') { totalWork += elapsed; sets++; }
-    if (phase === 'rest') { totalRest += elapsed; }
+    const now = Date.now();
+    if (phase === 'work') { totalWork += now - phaseStart; sets++; }
+    else { totalRest += now - phaseStart; }
 
-    document.getElementById('f-sets').textContent = sets + ' 組';
-    document.getElementById('f-work').textContent = fmt(totalWork);
-    document.getElementById('f-rest').textContent = fmt(totalRest);
-    document.getElementById('f-total').textContent = fmt(totalWork + totalRest);
-
+    document.getElementById('f-sets').textContent  = sets + ' 組';
+    document.getElementById('f-work').textContent  = fmtMs(totalWork);
+    document.getElementById('f-rest').textContent  = fmtMs(totalRest);
+    document.getElementById('f-total').textContent = fmtMs(totalWork + totalRest);
     beepFinish();
-    showScreen('screen-finish');
+    show('screen-finish');
   }
 
-  function goSetup() { showScreen('screen-setup'); }
+  function goStart() { show('screen-start'); }
 
   // ── Helpers ──
-  function fmt(s) {
+  function fmtMs(ms) {
+    const s = Math.floor(ms / 1000);
     const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    return `${String(m).padStart(2,'0')}:${String(s % 60).padStart(2,'0')}`;
   }
 
-  function showScreen(id) {
+  function show(id) {
     document.querySelectorAll('.screen').forEach(el => {
       el.classList.toggle('active', el.id === id);
     });
@@ -546,51 +363,36 @@
     const el = document.getElementById('flash');
     el.style.background = color;
     el.style.opacity = '0.2';
-    setTimeout(() => el.style.opacity = '0', 180);
+    setTimeout(() => el.style.opacity = '0', 200);
   }
 
   // ── Audio ──
   let actx = null;
-  function ctx() {
+  function getCtx() {
     if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
     if (actx.state === 'suspended') actx.resume();
     return actx;
   }
-
-  function tone(freq, dur, delay = 0) {
+  function tone(f, d, delay = 0) {
     try {
-      const c = ctx();
-      const o = c.createOscillator();
-      const g = c.createGain();
+      const c = getCtx(), o = c.createOscillator(), g = c.createGain();
       o.connect(g); g.connect(c.destination);
-      o.type = 'sine';
-      o.frequency.setValueAtTime(freq, c.currentTime + delay);
-      g.gain.setValueAtTime(0.4, c.currentTime + delay);
-      g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + delay + dur);
-      o.start(c.currentTime + delay);
-      o.stop(c.currentTime + delay + dur);
+      o.type = 'sine'; o.frequency.setValueAtTime(f, c.currentTime + delay);
+      g.gain.setValueAtTime(0.35, c.currentTime + delay);
+      g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + delay + d);
+      o.start(c.currentTime + delay); o.stop(c.currentTime + delay + d);
     } catch(e) {}
   }
-
-  function beepStart() {
-    if (phase === 'idle' || phase === 'rest') {
-      tone(880, 0.12); tone(1100, 0.18, 0.16);
-    } else {
-      tone(440, 0.18); tone(330, 0.25, 0.22);
-    }
+  function beep() {
+    if (phase === 'work') { tone(440, 0.18); tone(330, 0.22, 0.22); }
+    else { tone(880, 0.12); tone(1100, 0.18, 0.16); }
   }
+  function beepFinish() { tone(660,.15); tone(880,.15,.19); tone(1100,.3,.38); }
 
-  function beepFinish() {
-    tone(660, 0.15); tone(880, 0.15, 0.19); tone(1100, 0.3, 0.38);
-  }
+  document.addEventListener('touchstart', () => { try { getCtx(); } catch(e) {} }, { once: true });
 
-  document.addEventListener('touchstart', () => { try { ctx(); } catch(e) {} }, { once: true });
-
-  // Service Worker
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
-    });
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
   }
 </script>
 </body>
