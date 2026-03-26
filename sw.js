@@ -1,4 +1,4 @@
-const CACHE = 'fitness-timer-v1';
+const CACHE = 'fitness-timer-v1.0.0';
 const FILES = [
   '/',
   '/index.html',
