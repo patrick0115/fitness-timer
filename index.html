@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="健身計時" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <title>健身組間計時器</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f13;
+      --surface: #1a1a24;
+      --card: #22222f;
+      --accent: #ff6b35;
+      --accent2: #4fc3f7;
+      --rest-color: #4caf82;
+      --text: #f0f0f5;
+      --muted: #888;
+      --radius: 20px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: env(safe-area-inset-top, 20px) 16px env(safe-area-inset-bottom, 16px);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 12px;
+      margin-bottom: 24px;
+    }
+
+    /* ── Settings panel ── */
+    #settings {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .setting-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+
+    .setting-label {
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .setting-val {
+      font-size: 32px;
+      font-weight: 700;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .btn-adj {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: none;
+      color: var(--text);
+      font-size: 26px;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-adj:active { background: #2e2e42; transform: scale(0.93); }
+
+    .start-btn {
+      margin-top: 8px;
+      width: 100%;
+      max-width: 420px;
+      height: 68px;
+      border-radius: 22px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .start-btn:active { opacity: 0.85; transform: scale(0.97); }
+
+    /* ── Timer screen ── */
+    #timer-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .phase-label {
+      font-size: 15px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      transition: color 0.4s;
+    }
+
+    .set-info {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    /* ring */
+    .ring-wrap {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin-bottom: 36px;
+    }
+
+    svg.ring {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .ring-bg { fill: none; stroke: var(--surface); stroke-width: 14; }
+
+    .ring-fg {
+      fill: none;
+      stroke-width: 14;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.9s linear, stroke 0.4s;
+    }
+
+    .ring-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ring-time {
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+
+    .ring-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* controls */
+    .controls {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .ctrl-btn {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s, opacity 0.15s;
+    }
+
+    .ctrl-btn:active { transform: scale(0.92); opacity: 0.8; }
+
+    #btn-playpause {
+      width: 88px;
+      height: 88px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 34px;
+    }
+
+    #btn-stop {
+      background: var(--card);
+      color: var(--muted);
+    }
+
+    #btn-skip {
+      background: var(--card);
+      color: var(--muted);
+    }
+
+    /* progress dots */
+    .dots {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 320px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--surface);
+      transition: background 0.3s;
+    }
+
+    .dot.done { background: var(--accent); }
+    .dot.active { background: var(--accent2); }
+
+    /* finish screen */
+    #finish-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .finish-icon { font-size: 72px; }
+    .finish-title { font-size: 28px; font-weight: 700; }
+    .finish-sub { color: var(--muted); font-size: 15px; }
+
+    .again-btn {
+      margin-top: 12px;
+      padding: 18px 48px;
+      border-radius: 18px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .again-btn:active { opacity: 0.85; }
+
+    /* flash overlay */
+    #flash {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.05s;
+      z-index: 99;
+    }
+  </style>
+</head>
+<body>
+
+<div id="flash"></div>
+
+<h1>健身計時器</h1>
+
+<!-- ── SETTINGS ── -->
+<div id="settings">
+
+  <div class="setting-card">
+    <div class="setting-label">訓練時間（秒）</div>
+    <div class="setting-row">
+      <button class="btn-adj" onclick="adj('work',-5)">−</button>
+      <div class="setting-val" id="disp-work">45</div>
+      <button class="btn-adj" onclick="adj('work',5)">+</button>
+    </div>
+  </div>
+
+  <div class="setting-card">
+    <div class="setting-label">休息時間（秒）</div>
+    <div class="setting-row">
+      <button class="btn-adj" onclick="adj('rest',-5)">−</button>
+      <div class="setting-val" id="disp-rest">60</div>
+      <button class="btn-adj" onclick="adj('rest',5)">+</button>
+    </div>
+  </div>
+
+  <div class="setting-card">
+    <div class="setting-label">組數</div>
+    <div class="setting-row">
+      <button class="btn-adj" onclick="adj('sets',-1)">−</button>
+      <div class="setting-val" id="disp-sets">4</div>
+      <button class="btn-adj" onclick="adj('sets',1)">+</button>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="startWorkout()">開始訓練</button>
+</div>
+
+<!-- ── TIMER ── -->
+<div id="timer-screen">
+  <div class="phase-label" id="phase-label">訓練中</div>
+  <div class="set-info" id="set-info">第 1 組 / 共 4 組</div>
+
+  <div class="ring-wrap">
+    <svg class="ring" viewBox="0 0 260 260">
+      <circle class="ring-bg" cx="130" cy="130" r="113"/>
+      <circle class="ring-fg" id="ring-fg" cx="130" cy="130" r="113"/>
+    </svg>
+    <div class="ring-text">
+      <div class="ring-time" id="ring-time">45</div>
+      <div class="ring-sub" id="ring-sub">秒</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn" id="btn-stop" onclick="stopWorkout()" title="停止">⏹</button>
+    <button class="ctrl-btn" id="btn-playpause" onclick="togglePause()" title="暫停">⏸</button>
+    <button class="ctrl-btn" id="btn-skip" onclick="skipPhase()" title="跳過">⏭</button>
+  </div>
+
+  <div class="dots" id="dots"></div>
+</div>
+
+<!-- ── FINISH ── -->
+<div id="finish-screen">
+  <div class="finish-icon">🏆</div>
+  <div class="finish-title">完成訓練！</div>
+  <div class="finish-sub" id="finish-sub">共完成 4 組，太棒了！</div>
+  <button class="again-btn" onclick="goBack()">再來一次</button>
+</div>
+
+<script>
+  // ── State ──
+  const cfg = { work: 45, rest: 60, sets: 4 };
+  let state = null; // { phase:'work'|'rest', set:1, remaining, total, interval, paused }
+
+  // ring geometry
+  const CIRC = 2 * Math.PI * 113; // ~710
+  const ringFg = document.getElementById('ring-fg');
+  ringFg.style.strokeDasharray = CIRC;
+
+  // ── Settings helpers ──
+  function adj(key, delta) {
+    const mins = { work: 5, rest: 5, sets: 1 };
+    const maxs = { work: 300, rest: 300, sets: 20 };
+    cfg[key] = Math.max(mins[key], Math.min(maxs[key], cfg[key] + delta));
+    document.getElementById('disp-' + key).textContent = cfg[key];
+  }
+
+  // ── Start ──
+  function startWorkout() {
+    state = { phase: 'work', set: 1, remaining: cfg.work, total: cfg.work, paused: false, interval: null };
+    show('timer-screen');
+    buildDots();
+    renderTimer();
+    state.interval = setInterval(tick, 1000);
+  }
+
+  function buildDots() {
+    const el = document.getElementById('dots');
+    el.innerHTML = '';
+    for (let i = 1; i <= cfg.sets; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 1 ? ' active' : '');
+      d.id = 'dot-' + i;
+      el.appendChild(d);
+    }
+  }
+
+  function updateDots() {
+    for (let i = 1; i <= cfg.sets; i++) {
+      const d = document.getElementById('dot-' + i);
+      if (!d) continue;
+      d.className = 'dot' + (i < state.set ? ' done' : i === state.set ? ' active' : '');
+    }
+  }
+
+  // ── Tick ──
+  function tick() {
+    if (state.paused) return;
+    state.remaining--;
+    if (state.remaining <= 0) {
+      nextPhase();
+    } else {
+      renderTimer();
+    }
+  }
+
+  function nextPhase() {
+    if (state.phase === 'work') {
+      // done work → go rest (unless last set)
+      if (state.set >= cfg.sets) {
+        finish();
+        return;
+      }
+      state.phase = 'rest';
+      state.remaining = cfg.rest;
+      state.total = cfg.rest;
+      beep('rest');
+      flash('#4caf82');
+    } else {
+      // done rest → next work set
+      state.set++;
+      state.phase = 'work';
+      state.remaining = cfg.work;
+      state.total = cfg.work;
+      beep('work');
+      flash('#ff6b35');
+      updateDots();
+    }
+    renderTimer();
+  }
+
+  function renderTimer() {
+    const isWork = state.phase === 'work';
+    const color = isWork ? 'var(--accent)' : 'var(--rest-color)';
+
+    document.getElementById('phase-label').textContent = isWork ? '訓練中' : '休息中';
+    document.getElementById('phase-label').style.color = isWork ? 'var(--accent)' : 'var(--rest-color)';
+    document.getElementById('set-info').textContent = `第 ${state.set} 組 / 共 ${cfg.sets} 組`;
+    document.getElementById('ring-time').textContent = state.remaining;
+
+    // ring fill
+    const pct = state.remaining / state.total;
+    ringFg.style.strokeDashoffset = CIRC * (1 - pct);
+    ringFg.style.stroke = isWork ? '#ff6b35' : '#4caf82';
+  }
+
+  // ── Controls ──
+  function togglePause() {
+    state.paused = !state.paused;
+    document.getElementById('btn-playpause').textContent = state.paused ? '▶' : '⏸';
+  }
+
+  function skipPhase() {
+    state.remaining = 0;
+    nextPhase();
+  }
+
+  function stopWorkout() {
+    if (state) { clearInterval(state.interval); state = null; }
+    show('settings');
+  }
+
+  function finish() {
+    clearInterval(state.interval);
+    const sets = state.set;
+    state = null;
+    document.getElementById('finish-sub').textContent = `共完成 ${sets} 組，太棒了！`;
+    show('finish-screen');
+    beep('finish');
+  }
+
+  function goBack() {
+    show('settings');
+  }
+
+  // ── Screen switch ──
+  function show(id) {
+    ['settings','timer-screen','finish-screen'].forEach(s => {
+      document.getElementById(s).style.display = s === id
+        ? (s === 'settings' || s === 'finish-screen' ? 'flex' : 'flex')
+        : 'none';
+    });
+  }
+
+  // ── Audio beep (Web Audio API) ──
+  let audioCtx = null;
+  function getCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
+  }
+
+  function beep(type) {
+    try {
+      const ctx = getCtx();
+      const configs = {
+        work:   [{ f: 880, d: 0.12 }, { f: 1100, d: 0.18 }],
+        rest:   [{ f: 440, d: 0.18 }, { f: 330,  d: 0.25 }],
+        finish: [{ f: 660, d: 0.15 }, { f: 880, d: 0.15 }, { f: 1100, d: 0.3 }],
+      };
+      let t = ctx.currentTime + 0.05;
+      (configs[type] || configs.work).forEach(({ f, d }) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type = 'sine';
+        o.frequency.setValueAtTime(f, t);
+        g.gain.setValueAtTime(0.5, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + d);
+        o.start(t); o.stop(t + d);
+        t += d + 0.04;
+      });
+    } catch(e) {}
+  }
+
+  // ── Flash ──
+  function flash(color) {
+    const el = document.getElementById('flash');
+    el.style.background = color;
+    el.style.opacity = '0.25';
+    setTimeout(() => { el.style.opacity = '0'; }, 150);
+  }
+
+  // resume AudioContext on first touch (iOS requirement)
+  document.addEventListener('touchstart', () => {
+    try { getCtx().resume(); } catch(e) {}
+  }, { once: true });
+
+  // 註冊 Service Worker（離線快取）
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
